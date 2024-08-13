@@ -1,0 +1,151 @@
+---
+title: A Small Rust Program
+---
+
+
+## Project Creation
+
+Start by creating a new project and test it.
+
+```bash
+$ cargo new rust-proj
+$ cd rust-proj
+$ cargo build
+$ cargo run
+```
+
+## Trying out `gdb`
+
+For the final setup we'll use `lldb` but for now let's stick with normal `gdb`. Install it for your system, if you haven't already.
+
+Here's a a gdb session with much of the fluff cut out, marked by `<...>`
+
+
+```
+sasja@ed800:~/rust-proj$ ls
+Cargo.lock  Cargo.toml  src  target
+
+sasja@ed800:~/rust-proj$ gdb # <1>
+GNU gdb (GDB) 15.1
+<...>
+
+(gdb) file target/debug/rust-proj # <2>
+Reading symbols from target/debug/rust-proj...
+<...>
+
+(gdb) l # <3>
+1	fn main() {
+2	    println!("Hello, world!");
+3	}
+
+(gdb) b 2 # <4>
+Breakpoint 1 at 0x77c4: file src/main.rs, line 2.
+
+(gdb) run # <5>
+Starting program: 
+    /home/sasja/rust-proj/target/debug/rust-proj
+<...>
+Enable debuginfod for this session? (y or [n]) # <6>
+<...>
+
+Breakpoint 1, rust_proj::main () at src/main.rs:2
+2	    println!("Hello, world!");
+
+(gdb) c # <7>
+Continuing.
+Hello, world!
+[Inferior 1 (process 117903) exited normally]
+
+(gdb) exit # <8>
+sasja@ed800:~/rust-proj$
+```
+
+1. Just start `gdb`, without any arguments.
+2. Point to your binary.
+3. `l` is for `list`. Gives you all the code, making it possible for you to know what the actual line numbers are.
+4. `b` for `breakpoint`, sets a breakpoint on line 2, given the numbering shown above.
+5. Start the program.
+6. Just press ENTER to make this question go away.
+7. The execution has reached a breakpoint. Using `c` will make the program resume execution.
+8. Kill `gdb`.
+
+
+
+## Spicing Up the Program
+
+To get a good program we want some variables to inspect as well as a loop to try out stepping.
+Since this will eventually be a program executed on a remote machine, a line of code to reveal the machine running the code is useful.
+
+Here's code for a function wiht a loop:
+
+:::{.column-margin}
+A lot of what's happening here is tricking `rustc` so that the function (and its name) won't dissapear during compilation.
+Another concern is that if the a call like `fact(5)` is made in the code, that will probably get pre-calculated and a constant with the resulting numbers takes its place in the code.
+:::
+```rust
+#[inline(never)]
+fn fact(n: i32) -> i32
+{
+    let mut res: i32 = 1;
+    let mut i: i32 = 1;
+    while i <= n
+    {
+        res *= i;
+        i   += 1;
+    }
+    res
+}
+```
+
+In order to generate a random int, start by adding this dependency to your `Cargo.toml`:
+
+```toml
+rand = { version = "0.8.5", features = [ "std", "std_rng"] }
+```
+
+Here's the rest of the main file:
+
+```rust
+use std::process::Command;
+use rand::prelude::*;
+
+
+fn main() 
+{
+    let mut n = 5;
+    let mut s = fact(n);
+    println!("fact({}) is {}!", n, s);
+
+    n = rand::thread_rng().gen_range(0..12);
+    s = fact(n);
+    println!("fact({}) is {}!", n, s);
+
+    let output = if cfg!(target_os = "windows")
+    {
+        Command::new("cmd")
+            .args(["/C", "echo hello"])
+            .output()
+            .expect("failed to execute process")
+    } 
+    else
+    {
+        Command::new("sh")
+            .arg("-c")
+            .arg("uname -m")
+            .output()
+            .expect("failed to execute process")
+    };
+    
+    println!("uname -m was {}", String::from_utf8_lossy(&output.stdout));
+}
+```
+
+In case you won't be cross compiling you could replace the call to `uname` with something like `ip a | grep "inet "`.
+Anything printable with which you can quickly tell that you're actually doing remote execution.
+
+
+
+## Testing It Out
+
+@todo: continue writing here
+

@@ -2,21 +2,38 @@ project:
   type: website
   output-dir: docs
 
+
+
 website:
   title: "Remote Debugging of Rust Programs in VS Code"
   navbar:
     left:
-      #- href: site/index.qmd
-      #  text: Start
-      - site/index.qmd
-      - site/manual-rdbg.qmd
-      - site/vscode-setup.qmd
+      - href: site/index.qmd
+        text: Start
+      - href: site/make-rust.qmd
+        text: Rust Program
+      - href: site/manual-rdbg.qmd
+        text: Remote Debug
+      - href: site/vscode-setup.qmd
+        text: VS Code
+      #- site/index.qmd
+      #- site/manual-rdbg.qmd
+      #- site/vscode-setup.qmd
 
 format:
   html:
     theme:
-      dark: [flatly, site/darkly.scss]
+      dark:  [slate]
     toc: true
+    
+    code-annotations: true
+    code-line-numbers: true
+    code-block-bg: "#333344"
+    code-block-border-left: "#DDDDC8"
 
 
-
+# Gettin muh tufte on
+reference-location: margin
+citation-location: document
+tbl-cap-location: margin
+cap-location: margin
