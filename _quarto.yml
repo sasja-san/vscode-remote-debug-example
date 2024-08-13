@@ -1,0 +1,22 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Remote Debugging of Rust Programs in VS Code"
+  navbar:
+    left:
+      #- href: site/index.qmd
+      #  text: Start
+      - site/index.qmd
+      - site/manual-rdbg.qmd
+      - site/vscode-setup.qmd
+
+format:
+  html:
+    theme:
+      dark: [flatly, site/darkly.scss]
+    toc: true
+
+
+

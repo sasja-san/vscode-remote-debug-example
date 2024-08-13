@@ -1,0 +1,6 @@
+# obvious...?
+/.quarto/
+
+# Don't save the preview-stuff
+README.html
+/README_files/

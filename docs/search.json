@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "site/manual-rdbg.html",
+    "href": "site/manual-rdbg.html",
+    "title": "Manual Remote Debugging",
+    "section": "",
+    "text": "Bla bla ssh or tio bla bla gdbserver."
+  },
+  {
+    "objectID": "site/index.html",
+    "href": "site/index.html",
+    "title": "Start",
+    "section": "",
+    "text": "This tutorial contains two parts:\n\nFirst is the Manual Remote Debug Tutorial.\nWhen that has been confirmed as working you can go on to doing the VS Code Setup for your project."
+  },
+  {
+    "objectID": "site/vscode-setup.html",
+    "href": "site/vscode-setup.html",
+    "title": "VS Code Setup",
+    "section": "",
+    "text": "Plugins bla bla rust-analyzer bla bla."
+  }
+]

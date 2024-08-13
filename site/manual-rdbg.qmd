@@ -1,0 +1,6 @@
+---
+title: "Manual Remote Debugging"
+---
+
+Bla bla `ssh` or `tio` bla bla `gdbserver`.
+
