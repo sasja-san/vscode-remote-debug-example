@@ -11,7 +11,7 @@ website:
       - href: site/index.qmd
         text: Start
       - href: site/make-rust.qmd
-        text: Rust Program
+        text: Rust Program + GDB
       - href: site/manual-rdbg.qmd
         text: Remote Debug
       - href: site/vscode-setup.qmd
@@ -23,13 +23,14 @@ website:
 format:
   html:
     theme:
-      dark:  [slate]
+      dark:   [ slate, site/dark-monospace-style.scss ]
+      light:  [ slate, site/dark-monospace-style.scss ]
     toc: true
     
-    code-annotations: true
-    code-line-numbers: true
-    code-block-bg: "#333344"
-    code-block-border-left: "#DDDDC8"
+    code-annotations:   true
+    code-line-numbers:  false
+    code-overflow:      scroll
+    code-fold:          false
 
 
 # Gettin muh tufte on
