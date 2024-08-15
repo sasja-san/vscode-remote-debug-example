@@ -1,25 +1,25 @@
 /*-- scss:defaults --*/
 
-/*
-$code-color: #c2d94c;
-$code-color: #9753b8;
-*/
-
-/*
- * These are for 'darkly'
-$code-color: #9753b8;
-$code-bg: #2b2b2b;
-*/
-
 /* for theme 'slate' */
 /* inline code */
-$code-color:  #e83e8c;
+$code-color:  #eb86b5;
 $code-bg:     #3a3f44;   
 
 /* code blocks */
-$code-block-bg:           #3a3f44;
-$code-block-border-left:  #DDDDC8;
+// $code-block-bg:           #3a3f44;
+// $code-block-bg:           #2e3440; // NORD theme color
+$code-block-border-left:  #ddddc8;
 
 // $code-block-bg-alpha: .8;
 
+// for some reason Quarto makes it too dark
+$body-color: #aaaaaa;
+$link-color: #cccccc;
 
+// callouts look like shit, fix it:
+$callout-border-scale: 10%;
+
+
+// $callout-color-note: #0000ff;
+
+$code-block-theme-dark-threshhold: 69%;

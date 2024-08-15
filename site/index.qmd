@@ -4,6 +4,6 @@ title: "Start"
 
 This tutorial contains two parts:
 
-  1. The [Manual Remote Debug Tutorial](manual-rdbg.qmd).
+  1. The [Cross Compilation and Manual Remote Debug Tutorial](xcomp-rdbg.qmd).
   2. When that has been confirmed as working you can go on to doing the [VS Code Setup](vscode-setup.qmd) for your project.
 

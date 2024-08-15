@@ -12,12 +12,12 @@ website:
         text: Start
       - href: site/make-rust.qmd
         text: Rust Program + GDB
-      - href: site/manual-rdbg.qmd
+      - href: site/xcomp-rdbg.qmd
         text: Remote Debug
       - href: site/vscode-setup.qmd
         text: VS Code
       #- site/index.qmd
-      #- site/manual-rdbg.qmd
+      #- site/xcomp-rdbg.qmd
       #- site/vscode-setup.qmd
 
 format:
@@ -27,6 +27,7 @@ format:
       light:  [ slate, site/dark-monospace-style.scss ]
     toc: true
     
+    highlight-style:    nord
     code-annotations:   true
     code-line-numbers:  false
     code-overflow:      scroll

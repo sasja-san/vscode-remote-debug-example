@@ -7,3 +7,16 @@ edition = "2021"
 rand = { version = "0.8.5", features = [ "std", "std_rng" ] }
 
 
+[profile.release]
+opt-level         = 1
+debug             = true  # change this to *actual* release
+strip             = "none"
+debug-assertions  = false
+overflow-checks   = false
+lto               = false
+panic             = 'unwind'
+incremental       = true
+codegen-units     = 16
+rpath             = false
+
+

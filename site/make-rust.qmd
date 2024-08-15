@@ -182,7 +182,7 @@ To see that it's all there you can run.
 ```
 
 :::{.column-margin}
-If you just run `list main` you will get an empty response, or perhaps AMS code.
+If you just run `list main` you will get an empty response, or perhaps assembly code.
 This is because `main` is the word for the very first code that gets run, even before your program starts.
 In this case it's a set of instructions added by `rustc`.
 :::
@@ -191,13 +191,31 @@ To test this, run `list rust_proj::fact`.
 
 Use the list below to get a grip on what's possible to do.
 
-### A short list of gdb example commands
+### List of gdb Example Commands
+
+`(gdb) set listsize 50`
+:   Show 50 lines at a time when using `list`.
 
 `(gdb) b 10`
-: Set a breakpoint on line 10.
+:   Set a breakpoint on line 10.
+
+`(gdb) i b`
+:   List information on all the current breakpoints.
+
+`(gdb) d 1-3`
+:   Delete breakpoints 1 to 3.
+
+`(gdb) dis 1-3 5`
+:   Temporarily disable breakpoints 1 to 3.
+
+`(gdb) d b`
+:   Delete all breakpoints.
+
+`(gdb) en 2 4`
+:   Enable the disabled breakpoints 2 and 4.
 
 `(gdb) c`
-: Continue until next breakpoint.
+:   Continue until next breakpoint.
 
 `(gdb) p i`
 :   Print the current value of the variable `i`.
@@ -206,18 +224,18 @@ Use the list below to get a grip on what's possible to do.
 :   Print the value of the field `field` in variable `my_struct`.
 
 `(gdb) backtrace`
-:    View the current call stack.
+:   View the current call stack.
 
 `(gdb) set var i = 5`
-: Change the value of a variable.
+:   Change the value of a variable.
 
 `(gdb) s`
-: Step into function.
+:   Step into function.
 
 `(gdb) n`
-: Next line of code. Doesn't go into function.
+:   Next line of code. Doesn't go into function.
 
-`(gdb) finish`
-: Steps out of a function.
+`(gdb) fin`
+:   Steps out of a function.
 
 

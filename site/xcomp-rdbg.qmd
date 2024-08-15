@@ -3,4 +3,65 @@ title: "Cross Compilation & Manual Remote Debugging"
 ---
 
 
-##
+:::{.callout-note}
+This is written by a Manjaro user. 
+The package names is a bit different for other distros.
+If you know some package names in other distros, please use the repos GitHub issues page to tell me about it.
+:::
+
+
+
+## Cross Compiling the Binary
+
+This is written in 2024.
+Currently most desktop PCs/laptops are running x86_64 CPUs and when dealing with embedded Linux it's mostly some version of ARM.
+That's what we're gonna set up the project for.
+
+For a rust project `Cargo.toml` is the place for platform independent things, while `.cargo/config.toml` is for thins that are platform specific.
+Place these lines in `.cargo/config.toml` inside of your Rust repository.
+```{.toml}
+[target.aarch64-unknown-linux-gnu]
+linker = "aarch64-linux-gnu-gcc"
+```
+
+:::{.column-margin}
+For the compilation to work you need the ARM tools installed. On manjaro this can be acquired with `pacman -S aarch64-linux-gnu-binutils aarch64-linux-gnu-gcc aarch64-linux-gnu-gdb aarch64-linux-gnu-glibc aarch64-linux-gnu-linux-api-headers`.
+
+You may also need `aarch64-linux-gnu-pkg-config` from AUR.
+:::
+With this you should now be able to compile into an ARM binary with
+
+```{.default}
+$ cargo build --target=aarch64-unknown-linux-gnu
+```
+
+Check its size location: `ls -lh target/aarch64-unknown-linux-gnu/debug/`.
+
+
+
+
+
+
+
+
+## Preparing the Remote
+
+For this example the remote is running Armbian.
+In this case the packages required can be installed with `sudo apt install openssh-server gdbserver`.
+
+
+To properly launch a remote debugging session you will need 
+
+  1. The program source code.
+  2. A copy of the binary that the remote machine will be running.
+  3. A version of `gdb` compiled for the remotes architecture^[For this target architecture on Manjaro the program/package name is `aarch64-linux-gnu-gdb`.]
+
+
+
+Once you've gotten that sorted out, use `scp` to get the binary onto the remote, load it up on port 2000:
+
+```{.default}
+$ gdbserver :2000 rust-proj
+```
+
+
