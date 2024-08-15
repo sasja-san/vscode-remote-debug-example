@@ -1,9 +1,15 @@
 ---
-title: "Start"
+title: "Overview"
 ---
 
-This tutorial contains two parts:
+**[HERE](https://github.com/sasja-san/vscode-remote-debug-example)** is the link to the repository.
+The Rust projects code is available there, in the `rust-proj` directory.
 
-  1. The [Cross Compilation and Manual Remote Debug Tutorial](xcomp-rdbg.qmd).
-  2. When that has been confirmed as working you can go on to doing the [VS Code Setup](vscode-setup.qmd) for your project.
+
+This tutorial will guide you through the steps needed to set up a remote debugging session of a rust program from within VS Code.
+
+On the way there be some introductory guides to using `gdb`, the GNU Debugger, as well as setting up a remote session with it.
+This is because VS Code will make use of a `gdbserver`, so it's best to make sure it works before you go on to the VS Code configuration.
+
+The tutorial chapters are available through the top menu/hamburger button.
 

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Cross Compilation &amp; Manual Remote Debugging – Remote Debugging of Rust Programs in VS Code</title>
+<title>Cross Compilation &amp; Manual Remote Debugging – Rust Remote Debugging in VS Code</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -75,6 +75,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" class="quarto-color-scheme" id="quarto-bootstrap" data-mode="dark">
 <link href="../site_libs/bootstrap/bootstrap-dark.min.css" rel="stylesheet" class="quarto-color-scheme quarto-color-alternate" id="quarto-bootstrap" data-mode="dark">
+<script src="../site_libs/quarto-contrib/glightbox/glightbox.min.js"></script>
+<link href="../site_libs/quarto-contrib/glightbox/glightbox.min.css" rel="stylesheet">
+<link href="../site_libs/quarto-contrib/glightbox/lightbox.css" rel="stylesheet">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -114,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
     <a class="navbar-brand" href="../index.html">
-    <span class="navbar-title">Remote Debugging of Rust Programs in VS Code</span>
+    <span class="navbar-title">Rust Remote Debugging in VS Code</span>
     </a>
   </div>
             <div id="quarto-search" class="" title="Search"></div>
@@ -129,15 +132,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../site/make-rust.html"> 
-<span class="menu-text">Rust Program + GDB</span></a>
+<span class="menu-text">1. Code &amp; Gdb</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link active" href="../site/xcomp-rdbg.html" aria-current="page"> 
-<span class="menu-text">Remote Debug</span></a>
+<span class="menu-text">2. X-Comp &amp; Remote Gdb</span></a>
   </li>  
   <li class="nav-item">
     <a class="nav-link" href="../site/vscode-setup.html"> 
-<span class="menu-text">VS Code</span></a>
+<span class="menu-text">3. VS Code</span></a>
   </li>  
 </ul>
           </div> <!-- /navcollapse -->
@@ -157,7 +160,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#cross-compiling-the-binary" id="toc-cross-compiling-the-binary" class="nav-link active" data-scroll-target="#cross-compiling-the-binary">Cross Compiling the Binary</a></li>
-  <li><a href="#preparing-the-remote" id="toc-preparing-the-remote" class="nav-link" data-scroll-target="#preparing-the-remote">Preparing the Remote</a></li>
+  <li><a href="#preparing-the-remote-debug-session" id="toc-preparing-the-remote-debug-session" class="nav-link" data-scroll-target="#preparing-the-remote-debug-session">Preparing the Remote Debug Session</a>
+  <ul class="collapse">
+  <li><a href="#on-the-remote" id="toc-on-the-remote" class="nav-link" data-scroll-target="#on-the-remote">On the Remote</a></li>
+  <li><a href="#on-the-host" id="toc-on-the-host" class="nav-link" data-scroll-target="#on-the-host">On the Host</a></li>
+  </ul></li>
+  <li><a href="#creating-a-session" id="toc-creating-a-session" class="nav-link" data-scroll-target="#creating-a-session">Creating a Session</a></li>
   </ul>
 </nav>
     </div>
@@ -208,23 +216,51 @@ Note
 <p>You may also need <code>aarch64-linux-gnu-pkg-config</code> from AUR.</p>
 </div></div><p>With this you should now be able to compile into an ARM binary with</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>$ cargo build --target=aarch64-unknown-linux-gnu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Check its size location: <code>ls -lh target/aarch64-unknown-linux-gnu/debug/</code>.</p>
+<p>Verify that you have the binary, and check its size:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>$ ls -lh target/aarch64-unknown-linux-gnu/debug/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="preparing-the-remote" class="level2 page-columns page-full">
-<h2 class="anchored" data-anchor-id="preparing-the-remote">Preparing the Remote</h2>
-<p>For this example the remote is running Armbian. In this case the packages required can be installed with <code>sudo apt install openssh-server gdbserver</code>.</p>
-<p>To properly launch a remote debugging session you will need</p>
+<section id="preparing-the-remote-debug-session" class="level2">
+<h2 class="anchored" data-anchor-id="preparing-the-remote-debug-session">Preparing the Remote Debug Session</h2>
+<section id="on-the-remote" class="level3">
+<h3 class="anchored" data-anchor-id="on-the-remote">On the Remote</h3>
+<p>If your using some sort of Ubuntu/Debian/Armbian systems then run</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>$ sudo apt install gdbserver openssh-server</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="on-the-host" class="level3">
+<h3 class="anchored" data-anchor-id="on-the-host">On the Host</h3>
+<p>A version of Gdb which can handle the binary format of your target platform is needed. For Manjaro/Arch users it’s available as <code>aarch64-linux-gnu-gdb</code>.</p>
+</section>
+</section>
+<section id="creating-a-session" class="level2 page-columns page-full">
+<h2 class="anchored" data-anchor-id="creating-a-session">Creating a Session</h2>
+<p>The numbers used here match the the example session in the image at the bottom of the page.</p>
 <ol type="1">
-<li>The program source code.</li>
-<li>A copy of the binary that the remote machine will be running.</li>
-<li>A version of <code>gdb</code> compiled for the remotes architecture<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></li>
+<li>First the binary needs to get onto the remote:</li>
 </ol>
-<div class="no-row-height column-margin column-container"><div id="fn1"><p><sup>1</sup>&nbsp;For this target architecture on Manjaro the program/package name is <code>aarch64-linux-gnu-gdb</code>.</p></div></div><p>Once you’ve gotten that sorted out, use <code>scp</code> to get the binary onto the remote, load it up on port 2000:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>$ gdbserver :2000 rust-proj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>$ scp target/aarch64-unknown-linux-gnu/debug/rust-proj user@10.23.34.62:~/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="2" type="1">
+<li>Then, in an ssh session to your remote machine, start a gdbserver session with the binary. 2000 is the port number.</li>
+</ol>
+<div class="sourceCode" id="cb6"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>$ gdbserver :2000 ~/rust-proj</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="3" type="1">
+<li>Launch gdb at the host, using the version matching your binaries format. The option <code>--silent</code> removes the start-up message.</li>
+</ol>
+<div class="sourceCode" id="cb7"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>$ aarch64-linux-gnu-gdb target/aarch64-unknown-linux-gnu/debug/rust-proj --silent</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<ol start="4" type="1">
+<li><p>Don’t know what this is. Tried saying yes a few times, never seemed to work.</p></li>
+<li><p>Set up a breakpoint.</p></li>
+<li><p>Run to the breakpoint.</p></li>
+<li><p>Note that the execution is happening on the remote machine. If you let the program run to the end you’ll see the output of <code>uname -a</code>.</p></li>
+</ol>
+<div class="quarto-figure quarto-figure-center page-columns page-full">
+<figure class="figure page-columns page-full">
+<p><a href="rachel-does-gdb.png" class="lightbox" data-gallery="quarto-lightbox-gallery-1" title="This is Rachel. Look at her. She clearly knows things."><img src="rachel-does-gdb.png" class="img-fluid figure-img" alt="This is Rachel. Look at her. She clearly knows things."></a></p>
+<figcaption class="margin-caption">This is Rachel. Look at her. She clearly knows things.</figcaption>
+</figure>
+</div>
 
 
 </section>
-
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -792,6 +828,38 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
+<script>var lightboxQuarto = GLightbox({"selector":".lightbox","closeEffect":"zoom","loop":false,"descPosition":"bottom","openEffect":"zoom"});
+(function() {
+  let previousOnload = window.onload;
+  window.onload = () => {
+    if (previousOnload) {
+      previousOnload();
+    }
+    lightboxQuarto.on('slide_before_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      const href = trigger.getAttribute('href');
+      if (href !== null) {
+        const imgEl = window.document.querySelector(`a[href="${href}"] img`);
+        if (imgEl !== null) {
+          const srcAttr = imgEl.getAttribute("src");
+          if (srcAttr && srcAttr.startsWith("data:")) {
+            slideConfig.href = srcAttr;
+          }
+        }
+      } 
+    });
+  
+    lightboxQuarto.on('slide_after_load', (data) => {
+      const { slideIndex, slideNode, slideConfig, player, trigger } = data;
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(slideNode);
+      }
+    });
+  
+  };
+  
+})();
+          </script>
 
 
 

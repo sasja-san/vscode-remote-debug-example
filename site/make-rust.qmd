@@ -15,6 +15,17 @@ $ cargo run
 ```
 
 
+
+
+
+
+
+
+
+
+
+
+
 ## Spicing Up the Program
 
 To get a good program we want some variables to inspect as well as a loop to try out stepping.
@@ -109,6 +120,13 @@ If you don't think you need this experience, just skip to the next chapter.
 :::
 
 
+
+
+
+
+
+
+
 ## Trying out `gdb`
 
 For the final setup we'll use `lldb` but for now let's stick with normal `gdb`. Install it for your system, if you haven't already.
@@ -168,6 +186,14 @@ sasja@ed800:~/rust-proj$
 6. Just press ENTER to make this question go away.
 7. The execution has reached a breakpoint. Using `c` will make the program resume execution.
 8. Kill `gdb`.
+
+
+
+
+
+
+
+
 
 
 

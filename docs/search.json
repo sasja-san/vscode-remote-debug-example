@@ -11,14 +11,21 @@
     "href": "site/xcomp-rdbg.html#cross-compiling-the-binary",
     "title": "Cross Compilation & Manual Remote Debugging",
     "section": "Cross Compiling the Binary",
-    "text": "Cross Compiling the Binary\nThis is written in 2024. Currently most desktop PCs/laptops are running x86_64 CPUs and when dealing with embedded Linux it’s mostly some version of ARM. That’s what we’re gonna set up the project for.\nFor a rust project Cargo.toml is the place for platform independent things, while .cargo/config.toml is for thins that are platform specific. Place these lines in .cargo/config.toml inside of your Rust repository.\n[target.aarch64-unknown-linux-gnu]\nlinker = \"aarch64-linux-gnu-gcc\"\n\n\nFor the compilation to work you need the ARM tools installed. On manjaro this can be acquired with pacman -S aarch64-linux-gnu-binutils aarch64-linux-gnu-gcc aarch64-linux-gnu-gdb aarch64-linux-gnu-glibc aarch64-linux-gnu-linux-api-headers.\nYou may also need aarch64-linux-gnu-pkg-config from AUR.\nWith this you should now be able to compile into an ARM binary with\n$ cargo build --target=aarch64-unknown-linux-gnu\nCheck its size location: ls -lh target/aarch64-unknown-linux-gnu/debug/."
+    "text": "Cross Compiling the Binary\nThis is written in 2024. Currently most desktop PCs/laptops are running x86_64 CPUs and when dealing with embedded Linux it’s mostly some version of ARM. That’s what we’re gonna set up the project for.\nFor a rust project Cargo.toml is the place for platform independent things, while .cargo/config.toml is for thins that are platform specific. Place these lines in .cargo/config.toml inside of your Rust repository.\n[target.aarch64-unknown-linux-gnu]\nlinker = \"aarch64-linux-gnu-gcc\"\n\n\nFor the compilation to work you need the ARM tools installed. On manjaro this can be acquired with pacman -S aarch64-linux-gnu-binutils aarch64-linux-gnu-gcc aarch64-linux-gnu-gdb aarch64-linux-gnu-glibc aarch64-linux-gnu-linux-api-headers.\nYou may also need aarch64-linux-gnu-pkg-config from AUR.\nWith this you should now be able to compile into an ARM binary with\n$ cargo build --target=aarch64-unknown-linux-gnu\nVerify that you have the binary, and check its size:\n$ ls -lh target/aarch64-unknown-linux-gnu/debug/"
   },
   {
-    "objectID": "site/xcomp-rdbg.html#preparing-the-remote",
-    "href": "site/xcomp-rdbg.html#preparing-the-remote",
+    "objectID": "site/xcomp-rdbg.html#preparing-the-remote-debug-session",
+    "href": "site/xcomp-rdbg.html#preparing-the-remote-debug-session",
     "title": "Cross Compilation & Manual Remote Debugging",
-    "section": "Preparing the Remote",
-    "text": "Preparing the Remote\nFor this example the remote is running Armbian. In this case the packages required can be installed with sudo apt install openssh-server gdbserver.\nTo properly launch a remote debugging session you will need\n\nThe program source code.\nA copy of the binary that the remote machine will be running.\nA version of gdb compiled for the remotes architecture1\n\n1 For this target architecture on Manjaro the program/package name is aarch64-linux-gnu-gdb.Once you’ve gotten that sorted out, use scp to get the binary onto the remote, load it up on port 2000:\n$ gdbserver :2000 rust-proj"
+    "section": "Preparing the Remote Debug Session",
+    "text": "Preparing the Remote Debug Session\n\nOn the Remote\nIf your using some sort of Ubuntu/Debian/Armbian systems then run\n$ sudo apt install gdbserver openssh-server\n\n\nOn the Host\nA version of Gdb which can handle the binary format of your target platform is needed. For Manjaro/Arch users it’s available as aarch64-linux-gnu-gdb."
+  },
+  {
+    "objectID": "site/xcomp-rdbg.html#creating-a-session",
+    "href": "site/xcomp-rdbg.html#creating-a-session",
+    "title": "Cross Compilation & Manual Remote Debugging",
+    "section": "Creating a Session",
+    "text": "Creating a Session\nThe numbers used here match the the example session in the image at the bottom of the page.\n\nFirst the binary needs to get onto the remote:\n\n$ scp target/aarch64-unknown-linux-gnu/debug/rust-proj user@10.23.34.62:~/\n\nThen, in an ssh session to your remote machine, start a gdbserver session with the binary. 2000 is the port number.\n\n$ gdbserver :2000 ~/rust-proj\n\nLaunch gdb at the host, using the version matching your binaries format. The option --silent removes the start-up message.\n\n$ aarch64-linux-gnu-gdb target/aarch64-unknown-linux-gnu/debug/rust-proj --silent\n\nDon’t know what this is. Tried saying yes a few times, never seemed to work.\nSet up a breakpoint.\nRun to the breakpoint.\nNote that the execution is happening on the remote machine. If you let the program run to the end you’ll see the output of uname -a.\n\n\n\n\nThis is Rachel. Look at her. She clearly knows things."
   },
   {
     "objectID": "site/make-rust.html",
@@ -58,15 +65,29 @@
   {
     "objectID": "site/index.html",
     "href": "site/index.html",
-    "title": "Start",
+    "title": "Overview",
     "section": "",
-    "text": "This tutorial contains two parts:\n\nThe Cross Compilation and Manual Remote Debug Tutorial.\nWhen that has been confirmed as working you can go on to doing the VS Code Setup for your project."
+    "text": "HERE is the link to the repository. The Rust projects code is available there, in the rust-proj directory.\nThis tutorial will guide you through the steps needed to set up a remote debugging session of a rust program from within VS Code.\nOn the way there be some introductory guides to using gdb, the GNU Debugger, as well as setting up a remote session with it. This is because VS Code will make use of a gdbserver, so it’s best to make sure it works before you go on to the VS Code configuration.\nThe tutorial chapters are available through the top menu/hamburger button."
   },
   {
     "objectID": "site/vscode-setup.html",
     "href": "site/vscode-setup.html",
     "title": "VS Code Setup",
     "section": "",
-    "text": "Plugins bla bla rust-analyzer bla bla."
+    "text": "You don’t need any of Microsofts Remote Development extensions. Those are for working with source code that’s on another machine.\nThe extensions you need are\n\n\nYou may be thinking “Why LLDB? I thought we were using GDB?”. GDB is essentially a hack and LLDB just happens to be compatible with that hack so, for our purposes, it’s essentially the same thing.\n\nrust-analyzer (rust-lang.rust-analyzer)\nCodeLLDB (vadimcn.vscode-lldb)"
+  },
+  {
+    "objectID": "site/vscode-setup.html#vs-code-extensions",
+    "href": "site/vscode-setup.html#vs-code-extensions",
+    "title": "VS Code Setup",
+    "section": "",
+    "text": "You don’t need any of Microsofts Remote Development extensions. Those are for working with source code that’s on another machine.\nThe extensions you need are\n\n\nYou may be thinking “Why LLDB? I thought we were using GDB?”. GDB is essentially a hack and LLDB just happens to be compatible with that hack so, for our purposes, it’s essentially the same thing.\n\nrust-analyzer (rust-lang.rust-analyzer)\nCodeLLDB (vadimcn.vscode-lldb)"
+  },
+  {
+    "objectID": "site/vscode-setup.html#tasks",
+    "href": "site/vscode-setup.html#tasks",
+    "title": "VS Code Setup",
+    "section": "Tasks",
+    "text": "Tasks\nFirst you’ll need commands which will build your program. Inside the project this is the file .vscode/tasks.json:\n\n\nThe field label is the unique identifier for each, which is how dependency chains are handled in VS Code. The six arguments match up with the script below.\n{\n  \"version\": \"2.0.0\",\n    \"tasks\": \n  [\n    {\n      \"label\": \"cargo: build for aarch64\",\n      \"type\": \"shell\",\n      \"command\": \"cargo\",\n      \"args\": \n      [\n        \"build\",\n        \"--target=aarch64-unknown-linux-gnu\"\n      ],\n\n      \"problemMatcher\": \n      [\n        \"$rustc\"\n      ],\n\n      \"group\":\n      {\n        \"kind\": \"build\",\n        \"isDefault\": false\n      }\n    },\n\n\n\n    {\n      \"label\": \"gdbserver: setup on remote\",\n      \"type\": \"shell\",\n      \"command\": \"${workspaceFolder}/gdbserver-setup.sh\",\n       \n      \"args\":\n      [\n          \"${workspaceFolder}\",         // WS_FOLDER\n          \"rust-proj\",                  // BIN_NAME\n          \"user\",                       // REMOTE_USER\n          \"10.23.34.62\",                // REMOTE_HOST\n          \"aarch64-unknown-linux-gnu\",  // REMOTE_ARCH\n          \"2000\"                        // GDB_PORT\n      ],\n\n      \"group\": \n      {\n        \"kind\": \"build\",\n        \"isDefault\": false\n      },\n      \n      \"dependsOn\":\n      [\n        \"cargo: build for aarch64\",\n      ],\n    },\n  ]\n}\nThe script below is called on line 32 and should be saved as gdbserver-setup.sh in the root of your project folder. Don’t forget to do chmod u+x on it1 or you’ll get permission denied errors.\n1 I may have been stuck on this point a little longer than I’m comfortable admitting.#!/bin/bash\n\n# Exit immediately if some variables are unset\nset -o nounset\n# Enable verbose tracing for debug purposes\nset -o xtrace\nWS_FOLDER=\"$1\"\nBIN_NAME=\"$2\"\nREMOTE_USER=\"$3\"\nREMOTE_HOST=\"$4\"\nREMOTE_ARCH=\"$5\"\nGDB_PORT=\"$6\"\n# Set target path\nREMOTE_PATH=\"/home/${REMOTE_USER}/bin/debug\"\n\n# Set binary path to upload\nBIN_PATH=\"${WS_FOLDER}/target/${REMOTE_ARCH}/debug/${BIN_NAME}\"\n# Kill previous debug sessions\nssh \"${REMOTE_USER}@${REMOTE_HOST}\" \"killall gdbserver ${BIN_NAME}\"\n# Secure copy to the target device\nscp \"${BIN_PATH}\" \"${REMOTE_USER}@${REMOTE_HOST}:${REMOTE_PATH}\"\n# Start remote debug session\nssh -f \"${REMOTE_USER}@${REMOTE_HOST}\" \"sh -c 'cd ${REMOTE_PATH}; nohup gdbserver :${GDB_PORT} ./${BIN_NAME} &gt; ./console.log 2&gt;&1 &'\"\nFrom line 14 and 17 you may notice that there are som directories that need to exist on the remote:\n$ cd ~ && mkdir bin && mkdir bin/debug\n@TODO: Finish with tasks.json and maybe a picture of the code running."
   }
 ]

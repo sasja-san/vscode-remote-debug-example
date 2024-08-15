@@ -10,7 +10,6 @@ If you know some package names in other distros, please use the repos GitHub iss
 :::
 
 
-
 ## Cross Compiling the Binary
 
 This is written in 2024.
@@ -35,33 +34,78 @@ With this you should now be able to compile into an ARM binary with
 $ cargo build --target=aarch64-unknown-linux-gnu
 ```
 
-Check its size location: `ls -lh target/aarch64-unknown-linux-gnu/debug/`.
-
-
-
-
-
-
-
-
-## Preparing the Remote
-
-For this example the remote is running Armbian.
-In this case the packages required can be installed with `sudo apt install openssh-server gdbserver`.
-
-
-To properly launch a remote debugging session you will need 
-
-  1. The program source code.
-  2. A copy of the binary that the remote machine will be running.
-  3. A version of `gdb` compiled for the remotes architecture^[For this target architecture on Manjaro the program/package name is `aarch64-linux-gnu-gdb`.]
-
-
-
-Once you've gotten that sorted out, use `scp` to get the binary onto the remote, load it up on port 2000:
+Verify that you have the binary, and check its size:
 
 ```{.default}
-$ gdbserver :2000 rust-proj
+$ ls -lh target/aarch64-unknown-linux-gnu/debug/
 ```
 
+
+
+
+
+
+
+
+
+
+
+
+## Preparing the Remote Debug Session
+
+### On the Remote
+
+If your using some sort of Ubuntu/Debian/Armbian systems then run
+
+```{.default}
+$ sudo apt install gdbserver openssh-server
+```
+
+### On the Host
+
+A version of Gdb which can handle the binary format of your target platform is needed.
+For Manjaro/Arch users it's available as `aarch64-linux-gnu-gdb`.
+
+
+
+
+
+
+
+
+
+
+
+
+## Creating a Session
+
+The numbers used here match the the example session in the image at the bottom of the page.
+
+1. First the binary needs to get onto the remote:
+
+```{.default}
+$ scp target/aarch64-unknown-linux-gnu/debug/rust-proj user@10.23.34.62:~/
+```
+
+2. Then, in an ssh session to your remote machine, start a gdbserver session with the binary. 2000 is the port number.
+
+```{.default}
+$ gdbserver :2000 ~/rust-proj
+```
+
+3. Launch gdb at the host, using the version matching your binaries format. The option `--silent` removes the start-up message.
+
+```{.default}
+$ aarch64-linux-gnu-gdb target/aarch64-unknown-linux-gnu/debug/rust-proj --silent
+```
+
+4. Don't know what this is. Tried saying yes a few times, never seemed to work.
+
+5. Set up a breakpoint.
+
+6. Run to the breakpoint.
+
+7. Note that the execution is happening on the remote machine. If you let the program run to the end you'll see the output of `uname -a`.
+
+![This is Rachel. Look at her. She clearly knows things.](rachel-does-gdb.png){.lightbox}
 

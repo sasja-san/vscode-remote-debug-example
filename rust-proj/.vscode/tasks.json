@@ -1,0 +1,56 @@
+{
+  "version": "2.0.0",
+    "tasks": 
+  [
+    {
+      "label": "cargo: build for aarch64",
+      "type": "shell",
+      "command": "cargo",
+      "args": 
+      [
+        "build",
+        "--target=aarch64-unknown-linux-gnu"
+      ],
+
+      "problemMatcher": 
+      [
+        "$rustc"
+      ],
+
+      "group":
+      {
+        "kind": "build",
+        "isDefault": false
+      }
+    },
+
+
+    
+    {
+      "label": "gdbserver: setup on remote",
+      "type": "shell",
+      "command": "${workspaceFolder}/gdbserver-setup.sh",
+       
+      "args":
+      [
+          "${workspaceFolder}",         // WS_FOLDER
+          "rust-proj",                  // APP_NAME
+          "user",                       // REMOTE_USER
+          "10.23.34.62",                // REMOTE_HOST
+          "aarch64-unknown-linux-gnu",  // REMOTE_ARCH
+          "2000"                        // GDB_PORT
+      ],
+
+      "group": 
+      {
+        "kind": "build",
+        "isDefault": false
+      },
+      
+      "dependsOn":
+      [
+        "cargo: build for aarch64",
+      ],
+    },
+  ]
+}

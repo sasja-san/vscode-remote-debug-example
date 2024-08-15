@@ -5,17 +5,17 @@ project:
 
 
 website:
-  title: "Remote Debugging of Rust Programs in VS Code"
+  title: "Rust Remote Debugging in VS Code"
   navbar:
     left:
       - href: site/index.qmd
         text: Start
       - href: site/make-rust.qmd
-        text: Rust Program + GDB
+        text: 1. Code & Gdb
       - href: site/xcomp-rdbg.qmd
-        text: Remote Debug
+        text: 2. X-Comp & Remote Gdb
       - href: site/vscode-setup.qmd
-        text: VS Code
+        text: 3. VS Code
       #- site/index.qmd
       #- site/xcomp-rdbg.qmd
       #- site/vscode-setup.qmd
