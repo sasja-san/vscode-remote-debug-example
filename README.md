@@ -1,7 +1,6 @@
-# VS Code Remote Debug Example
+## VS Code Remote Debug Example
 
-The tutorial part is available through Github Pages.
-Use [THIS LINK](https://sasja-san.github.io/vscode-remote-debug-example/) to get to the tutorial.
+**[THIS LINK](https://sasja-san.github.io/vscode-remote-debug-example/)** takes you to the tutorial.
 
 
 ### Contents of this Repository
