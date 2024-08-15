@@ -1,17 +1,66 @@
 [
   {
-    "objectID": "site/manual-rdbg.html",
-    "href": "site/manual-rdbg.html",
-    "title": "Manual Remote Debugging",
+    "objectID": "site/xcomp-rdbg.html",
+    "href": "site/xcomp-rdbg.html",
+    "title": "Cross Compilation & Manual Remote Debugging",
     "section": "",
-    "text": "Bla bla ssh or tio bla bla gdbserver."
+    "text": "Note\n\n\n\nThis is written by a Manjaro user. The package names is a bit different for other distros. If you know some package names in other distros, please use the repos GitHub issues page to tell me about it."
+  },
+  {
+    "objectID": "site/xcomp-rdbg.html#cross-compiling-the-binary",
+    "href": "site/xcomp-rdbg.html#cross-compiling-the-binary",
+    "title": "Cross Compilation & Manual Remote Debugging",
+    "section": "Cross Compiling the Binary",
+    "text": "Cross Compiling the Binary\nThis is written in 2024. Currently most desktop PCs/laptops are running x86_64 CPUs and when dealing with embedded Linux it’s mostly some version of ARM. That’s what we’re gonna set up the project for.\nFor a rust project Cargo.toml is the place for platform independent things, while .cargo/config.toml is for thins that are platform specific. Place these lines in .cargo/config.toml inside of your Rust repository.\n[target.aarch64-unknown-linux-gnu]\nlinker = \"aarch64-linux-gnu-gcc\"\n\n\nFor the compilation to work you need the ARM tools installed. On manjaro this can be acquired with pacman -S aarch64-linux-gnu-binutils aarch64-linux-gnu-gcc aarch64-linux-gnu-gdb aarch64-linux-gnu-glibc aarch64-linux-gnu-linux-api-headers.\nYou may also need aarch64-linux-gnu-pkg-config from AUR.\nWith this you should now be able to compile into an ARM binary with\n$ cargo build --target=aarch64-unknown-linux-gnu\nCheck its size location: ls -lh target/aarch64-unknown-linux-gnu/debug/."
+  },
+  {
+    "objectID": "site/xcomp-rdbg.html#preparing-the-remote",
+    "href": "site/xcomp-rdbg.html#preparing-the-remote",
+    "title": "Cross Compilation & Manual Remote Debugging",
+    "section": "Preparing the Remote",
+    "text": "Preparing the Remote\nFor this example the remote is running Armbian. In this case the packages required can be installed with sudo apt install openssh-server gdbserver.\nTo properly launch a remote debugging session you will need\n\nThe program source code.\nA copy of the binary that the remote machine will be running.\nA version of gdb compiled for the remotes architecture1\n\n1 For this target architecture on Manjaro the program/package name is aarch64-linux-gnu-gdb.Once you’ve gotten that sorted out, use scp to get the binary onto the remote, load it up on port 2000:\n$ gdbserver :2000 rust-proj"
+  },
+  {
+    "objectID": "site/make-rust.html",
+    "href": "site/make-rust.html",
+    "title": "Rust Program + Some GDB",
+    "section": "",
+    "text": "Start by creating a new project and test it.\n$ cargo new rust-proj\n$ cd rust-proj\n$ cargo build\n$ cargo run"
+  },
+  {
+    "objectID": "site/make-rust.html#project-creation",
+    "href": "site/make-rust.html#project-creation",
+    "title": "Rust Program + Some GDB",
+    "section": "",
+    "text": "Start by creating a new project and test it.\n$ cargo new rust-proj\n$ cd rust-proj\n$ cargo build\n$ cargo run"
+  },
+  {
+    "objectID": "site/make-rust.html#spicing-up-the-program",
+    "href": "site/make-rust.html#spicing-up-the-program",
+    "title": "Rust Program + Some GDB",
+    "section": "Spicing Up the Program",
+    "text": "Spicing Up the Program\nTo get a good program we want some variables to inspect as well as a loop to try out stepping. Since this will eventually be a program executed on a remote machine, a line of code to reveal the machine running the code is useful.\nHere’s code for a function with a loop:\n\n\nA lot of what’s happening here is tricking rustc so that the function (and its name) won’t dissapear during compilation. Another concern is that if the a call like fact(5) is made in the code, that will probably get pre-calculated and a constant with the resulting numbers takes its place in the code.\n#[inline(never)]\nfn fact(n: i32) -&gt; i32\n{\n    let mut res: i32 = 1;\n    let mut i: i32 = 1;\n    while i &lt;= n\n    {\n        res *= i;\n        i   += 1;\n    }\n    res\n}\nIn order to generate a random int, start by adding this dependency to your Cargo.toml:\nrand = {version = \"0.8.5\", features = [\"std\", \"std_rng\"]}\nHere’s the complete the main file:\nuse std::process::Command;\nuse rand::prelude::*;\n\n\nfn main() \n{\n    let mut n = 5;\n    let mut s = fact(n);\n    println!(\"fact({}) is {}!\", n, s);\n\n    n = rand::thread_rng().gen_range(0..12);\n    s = fact(n);\n    println!(\"fact({}) is {}!\", n, s);\n\n    let output = if cfg!(target_os = \"windows\")\n    {\n        Command::new(\"cmd\")\n            .args([\"/C\", \"echo hello\"])\n            .output()\n            .expect(\"failed to execute process\")\n    } \n    else\n    {\n        Command::new(\"sh\")\n            .arg(\"-c\")\n            .arg(\"uname -m\")\n            .output()\n            .expect(\"failed to execute process\")\n    };\n    \n    println!(\"uname -m was {}\", String::from_utf8_lossy(&output.stdout));\n}\n\n\n#[inline(never)]\nfn fact(n: i32) -&gt; i32\n{\n    let mut res: i32 = 1;\n    let mut i: i32 = 1;\n    while i &lt;= n\n    {\n        res *= i;\n        i   += 1;\n    }\n    res\n}\nIn case you won’t be cross compiling you could replace the call to uname with something like ip a | grep \"inet \"; Anything printable with which you can quickly tell that you’re actually doing remote execution.\n\n\n\n\n\n\nTL;DR\n\n\n\nThe remainder of this chapter is hand-holding through baby’s first gdb session. If you don’t think you need this experience, just skip to the next chapter."
+  },
+  {
+    "objectID": "site/make-rust.html#trying-out-gdb",
+    "href": "site/make-rust.html#trying-out-gdb",
+    "title": "Rust Program + Some GDB",
+    "section": "Trying out gdb",
+    "text": "Trying out gdb\nFor the final setup we’ll use lldb but for now let’s stick with normal gdb. Install it for your system, if you haven’t already.\n\n\n\n\n\n\n\n\nTip\n\n\n\nScroll down to the list of numbers. There you can click the numbers and have the corresponding annotated line get highlighted.\n\n\nHere’s a a gdb session with much of the fluff cut out, marked by &lt;...&gt;.\nsasja@ed800:~/rust-proj$ ls\nCargo.lock  Cargo.toml  src  target\n\n1sasja@ed800:~/rust-proj$ gdb\nGNU gdb (GDB) 15.1\n&lt;...&gt;\n\n2(gdb) file target/debug/rust-proj\nReading symbols from target/debug/rust-proj...\n&lt;...&gt;\n\n3(gdb) l\n1   fn main() {\n2       println!(\"Hello, world!\");\n3   }\n\n4(gdb) b 2\nBreakpoint 1 at 0x77c4: file src/main.rs, line 2.\n\n5(gdb) run\nStarting program: \n    /home/sasja/rust-proj/target/debug/rust-proj\n&lt;...&gt;\n6Enable debuginfod for this session? (y or [n])\n&lt;...&gt;\n\nBreakpoint 1, rust_proj::main () at src/main.rs:2\n2       println!(\"Hello, world!\");\n\n7(gdb) c\nContinuing.\nHello, world!\n[Inferior 1 (process 117903) exited normally]\n\n8(gdb) exit\nsasja@ed800:~/rust-proj$\n\n1\n\nStart gdb, without any arguments.\n\n2\n\nPoint to your binary.\n\n3\n\nl is for list. Gives you all the code, making it possible for you to know what the actual line numbers are.\n\n4\n\nb for breakpoint, sets a breakpoint on line 2, given the numbering shown above.\n\n5\n\nStart the program.\n\n6\n\nJust press ENTER to make this question go away.\n\n7\n\nThe execution has reached a breakpoint. Using c will make the program resume execution.\n\n8\n\nKill gdb."
+  },
+  {
+    "objectID": "site/make-rust.html#testing-it-out",
+    "href": "site/make-rust.html#testing-it-out",
+    "title": "Rust Program + Some GDB",
+    "section": "Testing It Out",
+    "text": "Testing It Out\nCompile the program and load it into gdb as before. To see that it’s all there you can run.\n(gdb) set listsize 50\n(gdb) list\n\n\nIf you just run list main you will get an empty response, or perhaps assembly code. This is because main is the word for the very first code that gets run, even before your program starts. In this case it’s a set of instructions added by rustc.\nWhat you think of as main is actually rust_proj::main. To test this, run list rust_proj::fact.\nUse the list below to get a grip on what’s possible to do.\n\nList of gdb Example Commands\n\n(gdb) set listsize 50\n\nShow 50 lines at a time when using list.\n\n(gdb) b 10\n\nSet a breakpoint on line 10.\n\n(gdb) i b\n\nList information on all the current breakpoints.\n\n(gdb) d 1-3\n\nDelete breakpoints 1 to 3.\n\n(gdb) dis 1-3 5\n\nTemporarily disable breakpoints 1 to 3.\n\n(gdb) d b\n\nDelete all breakpoints.\n\n(gdb) en 2 4\n\nEnable the disabled breakpoints 2 and 4.\n\n(gdb) c\n\nContinue until next breakpoint.\n\n(gdb) p i\n\nPrint the current value of the variable i.\n\n(gdb) p my_struct.field\n\nPrint the value of the field field in variable my_struct.\n\n(gdb) backtrace\n\nView the current call stack.\n\n(gdb) set var i = 5\n\nChange the value of a variable.\n\n(gdb) s\n\nStep into function.\n\n(gdb) n\n\nNext line of code. Doesn’t go into function.\n\n(gdb) fin\n\nSteps out of a function."
   },
   {
     "objectID": "site/index.html",
     "href": "site/index.html",
     "title": "Start",
     "section": "",
-    "text": "This tutorial contains two parts:\n\nFirst is the Manual Remote Debug Tutorial.\nWhen that has been confirmed as working you can go on to doing the VS Code Setup for your project."
+    "text": "This tutorial contains two parts:\n\nThe Cross Compilation and Manual Remote Debug Tutorial.\nWhen that has been confirmed as working you can go on to doing the VS Code Setup for your project."
   },
   {
     "objectID": "site/vscode-setup.html",
