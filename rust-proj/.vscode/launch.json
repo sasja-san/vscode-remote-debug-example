@@ -1,0 +1,62 @@
+{
+  "version": "0.2.0",
+  "configurations":
+  [
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug executable 'rust-proj'",
+      "cargo":
+      {
+        "args":
+        [
+          "build",
+          "--bin=rust-proj",
+          "--package=rust-proj"
+        ],
+
+        "filter":
+        {
+          "name": "rust-proj",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+
+
+    {
+      "type": "lldb",
+      "request": "launch",
+      "name": "Debug unit tests in executable 'rust-proj'",
+      "cargo":
+      {
+        "args":
+        [
+          "test",
+          "--no-run",
+          "--bin=rust-proj",
+          "--package=rust-proj"
+        ],
+        "filter":
+        {
+          "name": "rust-proj",
+          "kind": "bin"
+        }
+      },
+      "args": [],
+      "cwd": "${workspaceFolder}"
+    },
+
+    // Below is the part that we'll use for remote debug
+    {
+      "type": "lldb",
+      "request": "custom",
+      "name": "Embedded Linux Remote Debug",
+      "preLaunchTask": "gdbserver: setup on remote",
+      "targetCreateCommands": ["target create ${workspaceFolder}/target/aarch64-unknown-linux-gnu/debug/rust-proj"],
+      "processCreateCommands": ["gdb-remote 10.23.34.62:2000"]
+    }
+  ]
+}

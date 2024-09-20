@@ -7,6 +7,10 @@ edition = "2021"
 rand = { version = "0.8.5", features = [ "std", "std_rng" ] }
 
 
+[profile.dev]
+debug     = true
+
+
 [profile.release]
 opt-level         = 1
 debug             = true  # change this to *actual* release
