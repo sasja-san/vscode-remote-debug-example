@@ -41,7 +41,6 @@ The six arguments match up with the script below.
 
 ```{.json code-line-numbers="true"}
 {{< include ../rust-proj/.vscode/tasks.json >}}
-
 ```
 
 
@@ -61,7 +60,7 @@ The script below is called on line 32 and should be saved as `gdbserver-setup.sh
 Don't forget to do `chmod u+x` on it^[I may have been stuck on this point a little longer than I'm comfortable admitting.] or you'll get permission denied errors.
 
 ```{.bash code-line-numbers="true"}
-{{< include ../rust-proj/gdbserver-setup.sh >>}}
+{{< include ../rust-proj/gdbserver-setup.sh >}}
 ```
 From line 14 and 17 you may notice that there are som directories that need to exist on the remote:
 
@@ -90,3 +89,21 @@ This is the file `.vscode/launch.json`:
 {{< include ../rust-proj/.vscode/launch.json >}}
 ```
 
+
+
+
+
+## Making Things Simpler
+
+It can be quite annoying to have to enter the the remotes password three times for every debug session.
+
+To get around this, use the command `ssh-copy-id` to install your public key onto the remote machine:
+
+```{.default}
+$ ssh-copy-id user@10.23.34.62
+```
+
+![](ssh-copy-id-success.png){.lightbox}
+
+As it's said in the picture, try logging in to the machine with `ssh` again.
+If it all worked out you should no longer need to input the password each time.

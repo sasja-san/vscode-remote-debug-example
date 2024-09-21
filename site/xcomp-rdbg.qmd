@@ -21,6 +21,9 @@ Place these lines in `.cargo/config.toml` inside of your Rust repository.
 ```{.toml}
 [target.aarch64-unknown-linux-gnu]
 linker = "aarch64-linux-gnu-gcc"
+
+[build]
+target = "aarch64-unknown-linux-gnu"
 ```
 
 :::{.column-margin}
@@ -31,7 +34,7 @@ You may also need `aarch64-linux-gnu-pkg-config` from AUR.
 With this you should now be able to compile into an ARM binary with
 
 ```{.default}
-$ cargo build --target=aarch64-unknown-linux-gnu
+$ cargo build
 ```
 
 Verify that you have the binary, and check its size:

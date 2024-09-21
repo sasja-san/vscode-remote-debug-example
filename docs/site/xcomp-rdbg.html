@@ -209,13 +209,16 @@ Note
 <p>This is written in 2024. Currently most desktop PCs/laptops are running x86_64 CPUs and when dealing with embedded Linux it’s mostly some version of ARM. That’s what we’re gonna set up the project for.</p>
 <p>For a rust project <code>Cargo.toml</code> is the place for platform independent things, while <code>.cargo/config.toml</code> is for thins that are platform specific. Place these lines in <code>.cargo/config.toml</code> inside of your Rust repository.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode toml code-with-copy"><code class="sourceCode toml"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[target.aarch64-unknown-linux-gnu]</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">linker</span> <span class="op">=</span> <span class="st">"aarch64-linux-gnu-gcc"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">linker</span> <span class="op">=</span> <span class="st">"aarch64-linux-gnu-gcc"</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">[build]</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="dt">target</span> <span class="op">=</span> <span class="st">"aarch64-unknown-linux-gnu"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 <div class="no-row-height column-margin column-container"><div class="">
 <p>For the compilation to work you need the ARM tools installed. On manjaro this can be acquired with <code>pacman -S aarch64-linux-gnu-binutils aarch64-linux-gnu-gcc aarch64-linux-gnu-gdb aarch64-linux-gnu-glibc aarch64-linux-gnu-linux-api-headers</code>.</p>
 <p>You may also need <code>aarch64-linux-gnu-pkg-config</code> from AUR.</p>
 </div></div><p>With this you should now be able to compile into an ARM binary with</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>$ cargo build --target=aarch64-unknown-linux-gnu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>$ cargo build</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Verify that you have the binary, and check its size:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>$ ls -lh target/aarch64-unknown-linux-gnu/debug/</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
@@ -828,7 +831,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","descPosition":"bottom","closeEffect":"zoom","selector":".lightbox","loop":false});
+<script>var lightboxQuarto = GLightbox({"closeEffect":"zoom","openEffect":"zoom","descPosition":"bottom","loop":false,"selector":".lightbox"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {

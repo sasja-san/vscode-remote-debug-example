@@ -1,10 +1,10 @@
 use std::process::Command;
-// use rand::prelude::*;
+
+use rand::Rng;
 
 
 fn main() 
 {
-    /*
     let mut n = 5;
     let mut s = fact(n);
     println!("fact({}) is {}!", n, s);
@@ -12,7 +12,6 @@ fn main()
     n = rand::thread_rng().gen_range(0..12);
     s = fact(n);
     println!("fact({}) is {}!", n, s);
-    */
 
     let output = if cfg!(target_os = "windows")
     {
@@ -33,7 +32,7 @@ fn main()
     println!("uname -m was {}", String::from_utf8_lossy(&output.stdout));
 }
 
-/*
+
 #[inline(never)]
 fn fact(n: i32) -> i32
 {
@@ -46,4 +45,3 @@ fn fact(n: i32) -> i32
     }
     res
 }
-*/

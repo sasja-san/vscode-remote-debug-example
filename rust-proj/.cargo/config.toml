@@ -2,3 +2,5 @@
 # rustflags = ["-Clink-arg=-fuse-ld=lld"]
 linker = "aarch64-linux-gnu-gcc"
 
+[build]
+target = "aarch64-unknown-linux-gnu"
