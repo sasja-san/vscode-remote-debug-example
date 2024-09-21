@@ -107,3 +107,8 @@ $ ssh-copy-id user@10.23.34.62
 
 As it's said in the picture, try logging in to the machine with `ssh` again.
 If it all worked out you should no longer need to input the password each time.
+
+
+## Leaving comments
+
+If something isn't working as stated or there are some other errors, don't hesitate to report it [**HERE**](https://github.com/sasja-san/vscode-remote-debug-example/issues).
