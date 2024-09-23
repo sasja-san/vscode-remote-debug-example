@@ -65,7 +65,7 @@ Don't forget to do `chmod u+x` on it^[I may have been stuck on this point a litt
 From line 14 and 17 you may notice that there are som directories that need to exist on the remote:
 
 ```{.default}
-$ cd ~ && mkdir bin && mkdir bin/debug
+$ mkdir -p bin/debug
 ```
 
 

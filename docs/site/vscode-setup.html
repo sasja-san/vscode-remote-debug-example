@@ -293,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-23"><a href="#cb2-23"></a><span class="co"># Start remote debug session</span></span>
 <span id="cb2-24"><a href="#cb2-24"></a><span class="fu">ssh</span> <span class="at">-f</span> <span class="st">"</span><span class="va">${REMOTE_USER}</span><span class="st">@</span><span class="va">${REMOTE_HOST}</span><span class="st">"</span> <span class="st">"sh -c 'cd </span><span class="va">${REMOTE_PATH}</span><span class="st">; nohup gdbserver :</span><span class="va">${GDB_PORT}</span><span class="st"> ./</span><span class="va">${BIN_NAME}</span><span class="st"> &gt; ./console.log 2&gt;&amp;1 &amp;'"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>From line 14 and 17 you may notice that there are som directories that need to exist on the remote:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>$ cd ~ &amp;&amp; mkdir bin &amp;&amp; mkdir bin/debug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode default code-with-copy"><code class="sourceCode default"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>$ mkdir -p bin/debug</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
 <section id="launchers" class="level2">
 <h2 class="anchored" data-anchor-id="launchers">Launchers</h2>
@@ -943,7 +943,7 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 });
 </script>
 </div> <!-- /content -->
-<script>var lightboxQuarto = GLightbox({"openEffect":"zoom","selector":".lightbox","descPosition":"bottom","loop":false,"closeEffect":"zoom"});
+<script>var lightboxQuarto = GLightbox({"descPosition":"bottom","selector":".lightbox","loop":false,"openEffect":"zoom","closeEffect":"zoom"});
 (function() {
   let previousOnload = window.onload;
   window.onload = () => {
