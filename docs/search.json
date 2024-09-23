@@ -67,7 +67,7 @@
     "href": "site/index.html",
     "title": "Overview",
     "section": "",
-    "text": "HERE is the link to the repository. The Rust projects code is available there, in the rust-proj directory.\nThis tutorial will guide you through the steps needed to set up a remote debugging session of a rust program from within VS Code.\nOn the way there be some introductory guides to using gdb, the GNU Debugger, as well as setting up a remote session with it. This is because VS Code will make use of a gdbserver, so it’s best to make sure it works before you go on to the VS Code configuration.\nThe tutorial chapters are available through the top menu/hamburger button."
+    "text": "HERE is the link to the repository. The Rust projects code is available there, in the rust-proj directory.\nThis tutorial will guide you through the steps needed to set up a remote debugging session of a rust program from within VS Code.\nOn the way there be some introductory guides to using gdb, the GNU Debugger, as well as setting up a remote session with it. This is because VS Code will make use of a gdbserver, so it’s best to make sure it works before you go on to the VS Code configuration.\nThe tutorial chapters are available through the top menu/hamburger button.\n\nCreating a Project and Learning GDB \\(\\rightarrow\\)"
   },
   {
     "objectID": "site/vscode-setup.html",

@@ -220,3 +220,4 @@ Use the list below to get a grip on what's possible to do.
 :   Steps out of a function.
 
 
+# [Cross Compiling and Remote Debugging $\rightarrow$](xcomp-rdbg.qmd)

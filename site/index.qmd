@@ -13,3 +13,4 @@ This is because VS Code will make use of a `gdbserver`, so it's best to make sur
 
 The tutorial chapters are available through the top menu/hamburger button.
 
+# [Creating a Project and Learning GDB $\rightarrow$](make-rust.qmd)

@@ -112,3 +112,8 @@ $ aarch64-linux-gnu-gdb target/aarch64-unknown-linux-gnu/debug/rust-proj --silen
 
 ![This is Rachel. Look at her. She clearly knows things.](rachel-does-gdb.png){.lightbox}
 
+
+
+
+
+# [VS Code Configuration $\rightarrow$](vscode-setup.qmd)

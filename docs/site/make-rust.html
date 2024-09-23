@@ -103,6 +103,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -163,6 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul class="collapse">
   <li><a href="#list-of-gdb-example-commands" id="toc-list-of-gdb-example-commands" class="nav-link" data-scroll-target="#list-of-gdb-example-commands">List of gdb Example Commands</a></li>
   </ul></li>
+  <li><a href="#cross-compiling-and-remote-debugging-rightarrow" id="toc-cross-compiling-and-remote-debugging-rightarrow" class="nav-link" data-scroll-target="#cross-compiling-and-remote-debugging-rightarrow">Cross Compiling and Remote Debugging <span class="math inline">\(\rightarrow\)</span></a></li>
   </ul>
 </nav>
     </div>
@@ -444,9 +474,12 @@ Next line of code. Doesn’t go into function.
 Steps out of a function.
 </dd>
 </dl>
-
-
 </section>
+</section>
+<section id="cross-compiling-and-remote-debugging-rightarrow" class="level1">
+<h1><a href="../site/xcomp-rdbg.html">Cross Compiling and Remote Debugging <span class="math inline">\(\rightarrow\)</span></a></h1>
+
+
 </section>
 
 </main> <!-- /main -->

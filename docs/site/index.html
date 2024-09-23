@@ -69,6 +69,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -117,8 +146,14 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#creating-a-project-and-learning-gdb-rightarrow" id="toc-creating-a-project-and-learning-gdb-rightarrow" class="nav-link active" data-scroll-target="#creating-a-project-and-learning-gdb-rightarrow">Creating a Project and Learning GDB <span class="math inline">\(\rightarrow\)</span></a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -146,8 +181,11 @@ ul.task-list li input[type="checkbox"] {
 <p>This tutorial will guide you through the steps needed to set up a remote debugging session of a rust program from within VS Code.</p>
 <p>On the way there be some introductory guides to using <code>gdb</code>, the GNU Debugger, as well as setting up a remote session with it. This is because VS Code will make use of a <code>gdbserver</code>, so it’s best to make sure it works before you go on to the VS Code configuration.</p>
 <p>The tutorial chapters are available through the top menu/hamburger button.</p>
+<section id="creating-a-project-and-learning-gdb-rightarrow" class="level1">
+<h1><a href="../site/make-rust.html">Creating a Project and Learning GDB <span class="math inline">\(\rightarrow\)</span></a></h1>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
